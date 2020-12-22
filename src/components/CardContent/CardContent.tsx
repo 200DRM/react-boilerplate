@@ -5,8 +5,9 @@ import { default as CardContentStyles } from './CardContent.module.scss';
 import { LaunchDate } from '../LaunchDate/LaunchDate';
 import { LaunchPastViewModel } from '../models/LaunchPastViewModel';
 import MissionName from '../MissionName/MissionName';
+import { RocketCountry } from '../RocketCountry/RocketCountry';
+import { RocketName } from '../RocketName/RocketName';
 import { RocketViewModel } from '../models/RocketViewModel';
-import { RocketName } from '../../RocketName/RocketName';
 
 const style = bemCssModules(CardContentStyles);
 
@@ -20,6 +21,7 @@ export const CardContent: React.FC<CardContentProps> = props => {
       <MissionName {...props} />
       <LaunchDate {...props} />
       <RocketName {...rocket} />
+      <RocketCountry {...rocket} />
     </div>
   );
 };

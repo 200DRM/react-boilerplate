@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import bemCssModules from 'bem-css-modules';
-import { RocketViewModel } from '../components/models/RocketViewModel';
+import { RocketViewModel } from '../models/RocketViewModel';
 import { default as RocketNameStyles } from './RocketName.module.scss';
 
 type RocketNameProps = Pick<RocketViewModel, 'name' | 'id'>;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LAUNCHES } from '../queries/getLaunchesPast';
 import { Spinner } from '../components/Spinner/Spinner';
@@ -10,27 +10,41 @@ interface GraphQlResult {
   launchesPast: LaunchPast[];
 }
 
-export const LaunchesPastListing : React.FC = () => {
+const ELEMENTS_LIMIT = 3;
 
-  const { error, loading, data } = useQuery<GraphQlResult>(GET_LAUNCHES);
+export const LaunchesPastListing : React.FC = () => {
+  const [offset, setOffset] = useState(0);
+  const { error, loading, data } = useQuery<GraphQlResult>(GET_LAUNCHES, {
+    variables : { offset, limit : ELEMENTS_LIMIT }
+  });
+
+  const [cards, setCards] = useState<LaunchPast[]>([]);
+
+  const handleOnClick = () => setOffset(currentValue => currentValue += ELEMENTS_LIMIT);
+
+  useEffect(() => {
+    if (data?.launchesPast.length) {
+      setCards([...cards, ...data.launchesPast]);
+    }
+  }, [data?.launchesPast]);
 
   if (error) {
     return <p>Oops, something went wrong.</p>
   }
 
-  if (loading) {
-    return <Spinner />
+  if (loading && !cards.length) {
+    return <Spinner />;
   }
 
-  if (!data?.launchesPast) {
+  if (!cards?.length) {
     return <p>No data.</p>
   }
 
   return (
     <section>
-      <h2>Launches Past:</h2>
-      {data.launchesPast.map(mission => <LaunchCard key={mission.id} {...mission} />)}
-      <button type='button'>Load more</button>
+      <h2 style={{ textAlign: 'center' }}>Launches Past:</h2>
+      {cards.map(mission => <LaunchCard key={mission.id} {...mission} />)}
+      <button onClick={handleOnClick} type='button'>Load more</button>
     </section>
   );
 };
